@@ -18,6 +18,8 @@ const ServerForm = ({
   locationNumber,
   formIndex,
   modifiedCurrentForm,
+  error,
+  loading,
 }) => {
   const [visibleComplite, setVisibleComplite] = useState(false);
   const [location, setLocation] = useState("testenter.ru_01");
@@ -38,6 +40,8 @@ const ServerForm = ({
   const deleteForm = () => {
     deleteCurrentForm(unicId);
   };
+
+  console.log(error, loading, 1);
 
   return (
     <div className={visibleComplite ? "form active" : "form"}>
@@ -74,94 +78,104 @@ const ServerForm = ({
           )}
         </div>
       </div>
-      <div className="form__content">
-        <div className="form__row">
-          <div className="form__item">
-            <label className="form__label">Локация</label>
-            <div className="form__select form__select_location">
-              <select
-                className={visibleComplite ? "active" : null}
-                name="location"
-                id="location"
-                disabled={!visibleComplite}
-                value={location}
-                onChange={(event) => {
-                  setLocation(event.target.value);
-                }}
-              >
-                {locations.map((item) => {
+      {loading ? (
+        <div className="notification">Загрузка данных с сервера</div>
+      ) : error ? (
+        <div className="notification">
+          Произошла ошибка выгрузки данных, повторите попытку в следующей жизни!
+        </div>
+      ) : (
+        <div className="form__content">
+          <div className="form__row">
+            <div className="form__item">
+              <label className="form__label">Локация</label>
+              <div className="form__select form__select_location">
+                <select
+                  className={visibleComplite ? "active" : null}
+                  name="location"
+                  id="location"
+                  disabled={!visibleComplite}
+                  value={location}
+                  onChange={(event) => {
+                    setLocation(event.target.value);
+                  }}
+                >
+                  {locations.map((item) => {
+                    return (
+                      <option key={`${item.locationID}`} value={item.name}>
+                        {item.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            </div>
+            <div className="form__item">
+              <label className="form__label">Среда</label>
+              <div className="form__select form__select_enviroment">
+                <select
+                  className={visibleComplite ? "active" : null}
+                  name="enviroment"
+                  id="enviroment"
+                  value={enviroment}
+                  disabled={!visibleComplite}
+                  onChange={(event) => setEnviroment(event.target.value)}
+                >
+                  {envs.map((item) => {
+                    return (
+                      <option key={item.envID} value={item.name}>
+                        {item.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            </div>
+            <div className="form__item">
+              <label className="form__label">Серверы</label>
+              <ul className="form__list">
+                {servers.map((server) => {
                   return (
-                    <option key={`${item.locationID}`} value={item.name}>
-                      {item.name}
-                    </option>
+                    <li key={server.serverID}>
+                      {server.name}
+                      <span>,</span>
+                    </li>
                   );
                 })}
-              </select>
+              </ul>
             </div>
           </div>
-          <div className="form__item">
-            <label className="form__label">Среда</label>
-            <div className="form__select form__select_enviroment">
-              <select
-                className={visibleComplite ? "active" : null}
-                name="enviroment"
-                id="enviroment"
-                value={enviroment}
-                disabled={!visibleComplite}
-                onChange={(event) => setEnviroment(event.target.value)}
-              >
-                {envs.map((item) => {
-                  return (
-                    <option key={item.envID} value={item.name}>
-                      {item.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          </div>
-          <div className="form__item">
-            <label className="form__label">Серверы</label>
-            <ul className="form__list">
-              {servers.map((server) => {
-                return (
-                  <li key={server.serverID}>
-                    {server.name}
-                    <span>,</span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </div>
-        <div className="form__row">
-          <div className="form__item form__item_hint">
-            <label htmlFor="hint" className="form__label form__label_hint">
-              Подсказка
-            </label>
-            <div className="form__input">
-              <input
-                className={visibleComplite ? "active" : null}
-                disabled={!visibleComplite}
-                name="hint"
-                type="text"
-                id="hint"
-                value={hintValue}
-                placeholder="Комментарий по локации"
-                onChange={(event) => {
-                  setHintValue(event.target.value);
-                }}
-              ></input>
+          <div className="form__row">
+            <div className="form__item form__item_hint">
+              <label htmlFor="hint" className="form__label form__label_hint">
+                Подсказка
+              </label>
+              <div className="form__input">
+                <input
+                  className={visibleComplite ? "active" : null}
+                  disabled={!visibleComplite}
+                  name="hint"
+                  type="text"
+                  id="hint"
+                  value={hintValue}
+                  placeholder="Комментарий по локации"
+                  onChange={(event) => {
+                    setHintValue(event.target.value);
+                  }}
+                ></input>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
   locations: state.getDataFromServer.locations,
+  loading: state.loadingAndError.loading,
+  error: state.loadingAndError.error,
   envs: state.getDataFromServer.envs,
   servers: state.getDataFromServer.servers,
 });
