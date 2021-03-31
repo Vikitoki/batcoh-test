@@ -1,54 +1,105 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
 
 import DeleteImg from "../../../images/garbage.svg";
+import ModernImg from "../../../images/pencil.svg";
+import CompleteImg from "../../../images/check.svg";
 
-const ServerForm = () => {
+import getDataFromServer from "../../../services/get-data-from-server";
+
+const ServerForm = ({ getData, locations, envs, servers }) => {
+  const [visibleComplite, setVisibleComplite] = useState(false);
+  const [location, setLocation] = useState("testenter.ru_01");
+  const [enviroment, setEnviroment] = useState("Test_192.168.112.23");
+  const [hintValue, setHintValue] = useState("");
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
-    <div className="form">
+    <div className={visibleComplite ? "form active" : "form"}>
       <div className="form__top">
         <div className="form__title">
           <h2>Тестовая локация 1</h2>
         </div>
-        <button type="button" className="form__delete">
-          <img src={DeleteImg} alt="" />
-        </button>
+        <div className="form__actions">
+          <button type="button" className="form__btn form__btn_delete">
+            <img src={DeleteImg} alt="" />
+          </button>
+          {visibleComplite ? (
+            <button
+              onClick={() => setVisibleComplite(false)}
+              type="button"
+              className="form__btn form__btn_complete"
+            >
+              <img src={CompleteImg} alt="" />
+            </button>
+          ) : (
+            <button
+              onClick={() => setVisibleComplite(true)}
+              type="button"
+              className="form__btn form__btn_modern"
+            >
+              <img src={ModernImg} alt="" />
+            </button>
+          )}
+        </div>
       </div>
       <div className="form__content">
         <div className="form__row">
           <div className="form__item">
-            <label className="form__label">
-              Локация
-            </label>
+            <label className="form__label">Локация</label>
             <div className="form__select form__select_location">
-              <select name="location" id="location">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+              <select
+                name="location"
+                id="location"
+                value={location}
+                onChange={(event) => {
+                  setLocation(event.target.value);
+                }}
+              >
+                {locations.map((item) => {
+                  return (
+                    <option key={`${item.locationID}`} value={item.name}>
+                      {item.name}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
           <div className="form__item">
-            <label className="form__label">
-              Среда
-            </label>
+            <label className="form__label">Среда</label>
             <div className="form__select form__select_enviroment">
               <select
                 name="enviroment"
                 id="enviroment"
+                value={enviroment}
+                onChange={(event) => setEnviroment(event.target.value)}
                 className="form__select"
               >
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+                {envs.map((item) => {
+                  return (
+                    <option key={item.envID} value={item.name}>
+                      {item.name}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
           <div className="form__item">
             <label className="form__label">Серверы</label>
             <ul className="form__list">
-              <li>1</li>
-              <li>2</li>
-              <li>3</li>
+              {servers.map((server) => {
+                return (
+                  <li key={server.serverID}>
+                    {server.name}
+                    <span>,</span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
@@ -62,7 +113,11 @@ const ServerForm = () => {
                 name="hint"
                 type="text"
                 id="hint"
+                value={hintValue}
                 placeholder="Комментарий по локации"
+                onChange={(event) => {
+                  setHintValue(event.target.value);
+                }}
               ></input>
             </div>
           </div>
@@ -72,4 +127,14 @@ const ServerForm = () => {
   );
 };
 
-export default ServerForm;
+const mapStateToProps = (state) => ({
+  locations: state.getDataFromServer.locations,
+  envs: state.getDataFromServer.envs,
+  servers: state.getDataFromServer.servers,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getData: () => dispatch(getDataFromServer()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ServerForm);
