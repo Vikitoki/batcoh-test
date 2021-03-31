@@ -6,7 +6,7 @@ import ModernImg from "../../../images/pencil.svg";
 import CompleteImg from "../../../images/check.svg";
 
 import getDataFromServer from "../../../services/get-data-from-server";
-import { formDelete } from "../../../services/forms-actions";
+import { formDelete, formModified } from "../../../services/forms-actions";
 
 const ServerForm = ({
   getData,
@@ -16,6 +16,8 @@ const ServerForm = ({
   unicId,
   deleteCurrentForm,
   locationNumber,
+  formIndex,
+  modifiedCurrentForm,
 }) => {
   const [visibleComplite, setVisibleComplite] = useState(false);
   const [location, setLocation] = useState("testenter.ru_01");
@@ -24,7 +26,14 @@ const ServerForm = ({
 
   useEffect(() => {
     getData();
+    return () => {};
+    // eslint-disable-next-line
   }, []);
+
+  const handleComplite = () => {
+    setVisibleComplite(false);
+    modifiedCurrentForm(formIndex, location, enviroment, hintValue);
+  };
 
   const deleteForm = () => {
     deleteCurrentForm(unicId);
@@ -37,16 +46,18 @@ const ServerForm = ({
           <h2>Тестовая локация {locationNumber + 1}</h2>
         </div>
         <div className="form__actions">
-          <button
-            onClick={deleteForm}
-            type="button"
-            className="form__btn form__btn_delete"
-          >
-            <img src={DeleteImg} alt="" />
-          </button>
+          {!visibleComplite ? (
+            <button
+              onClick={deleteForm}
+              type="button"
+              className="form__btn form__btn_delete"
+            >
+              <img src={DeleteImg} alt="" />{" "}
+            </button>
+          ) : null}
           {visibleComplite ? (
             <button
-              onClick={() => setVisibleComplite(false)}
+              onClick={handleComplite}
               type="button"
               className="form__btn form__btn_complete"
             >
@@ -98,7 +109,6 @@ const ServerForm = ({
                 value={enviroment}
                 disabled={!visibleComplite}
                 onChange={(event) => setEnviroment(event.target.value)}
-                className="form__select"
               >
                 {envs.map((item) => {
                   return (
@@ -159,6 +169,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   getData: () => dispatch(getDataFromServer()),
   deleteCurrentForm: (unicId) => dispatch(formDelete(unicId)),
+  modifiedCurrentForm: (index, location, enviroment, hintValue) =>
+    dispatch(formModified(index, location, enviroment, hintValue)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ServerForm);

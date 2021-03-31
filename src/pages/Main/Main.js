@@ -7,21 +7,33 @@ import { formCreate } from "../../services/forms-actions";
 import "./Main.scss";
 
 const Main = ({ createNewForm, currentAmount, formsInformation }) => {
+	
+  const handleConsole = () => {
+    console.log(formsInformation);
+  };
+
   return (
     <div className="main-page">
       <div className="main-page__container container">
         <div className="main-page__content">
-          {Array(currentAmount)
-            .fill("")
-            .map((item, index) => {
-              return (
-                <ServerForm
-                  locationNumber={index}
-                  key={formsInformation[index].unicIdForItems}
-                  unicId={formsInformation[index].unicIdForItems}
-                />
-              );
-            })}
+          {currentAmount ? (
+            Array(currentAmount)
+              .fill("")
+              .map((item, index) => {
+                return (
+                  <ServerForm
+                    locationNumber={index}
+                    formIndex={index}
+                    key={formsInformation[index].unicIdForItems}
+                    unicId={formsInformation[index].unicIdForItems}
+                  />
+                );
+              })
+          ) : (
+            <div className="notification">
+              У вас ещё нет ни одной тестовой формы
+            </div>
+          )}
         </div>
 
         <div className="main-page__btns">
@@ -32,7 +44,11 @@ const Main = ({ createNewForm, currentAmount, formsInformation }) => {
           >
             Добавить тестовую локацию
           </button>
-          <button type="button" className=" main-page__btn btn btn_blue">
+          <button
+            onClick={handleConsole}
+            type="button"
+            className=" main-page__btn btn btn_blue"
+          >
             Вывести результат в консоль
           </button>
         </div>

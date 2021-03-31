@@ -1,6 +1,7 @@
 import {
   createNewTestForm,
-  deleteSelectTestFrom,
+  deleteSelectTestForm,
+  modifiedSelectTestForm,
 } from "../redux/forms/action-creators";
 
 const formCreate = () => {
@@ -11,8 +12,14 @@ const formCreate = () => {
 
 const formDelete = (id) => {
   return (dispatch) => {
-    dispatch(deleteSelectTestFrom(id));
+    dispatch(deleteSelectTestForm(id));
   };
 };
 
-export { formCreate, formDelete };
+const formModified = (index, location, enviroment, hintValue) => {
+  return (dispatch) => {
+    dispatch(modifiedSelectTestForm(index, location, enviroment, hintValue));
+  };
+};
+
+export { formCreate, formDelete, formModified };

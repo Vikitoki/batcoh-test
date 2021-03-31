@@ -1,6 +1,7 @@
 import {
   CREATE_NEW_TEST_FORM,
   DELETE_SELECT_TEST_FORM,
+  MODIFIED_SELECT_TEST_FORM,
 } from "./action-variables";
 
 const initialState = {
@@ -31,14 +32,26 @@ const formsReducer = (state = initialState, action) => {
         return item.unicIdForItems !== currentItemId;
       });
 
-      console.log(currentItemId);
-
-      console.log(newFormsInformation);
-
       return {
         ...state,
         currentAmount: state.currentAmount - 1,
         formsInformation: [...newFormsInformation],
+      };
+			
+    case MODIFIED_SELECT_TEST_FORM:
+      const { index, location, enviroment, hintValue } = action.payload;
+      const unicId = state.formsInformation[index].unicIdForItems;
+      const newInformation = [...state.formsInformation];
+      newInformation[index] = {
+        unicIdForItems: unicId,
+        locationID: location,
+        envID: enviroment,
+        hint: hintValue,
+      };
+
+      return {
+        ...state,
+        formsInformation: [...newInformation],
       };
     default:
       return state;
