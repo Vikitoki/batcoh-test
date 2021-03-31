@@ -1,17 +1,53 @@
 import React from "react";
+import { connect } from "react-redux";
 
 import ServerForm from "../../components/Forms/Server-form/Server-form";
+import { formCreate } from "../../services/forms-actions";
 
 import "./Main.scss";
 
-const Main = () => {
+const Main = ({ createNewForm, currentAmount, formsInformation }) => {
   return (
     <div className="main-page">
       <div className="main-page__container container">
-        <ServerForm />
+        <div className="main-page__content">
+          {Array(currentAmount)
+            .fill("")
+            .map((item, index) => {
+              return (
+                <ServerForm
+                  locationNumber={index}
+                  key={formsInformation[index].unicIdForItems}
+                  unicId={formsInformation[index].unicIdForItems}
+                />
+              );
+            })}
+        </div>
+
+        <div className="main-page__btns">
+          <button
+            type="button"
+            className=" main-page__btn btn btn_blue"
+            onClick={createNewForm}
+          >
+            Добавить тестовую локацию
+          </button>
+          <button type="button" className=" main-page__btn btn btn_blue">
+            Вывести результат в консоль
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Main;
+const mapStateToProps = (state) => ({
+  currentAmount: state.forms.currentAmount,
+  formsInformation: state.forms.formsInformation,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  createNewForm: () => dispatch(formCreate()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

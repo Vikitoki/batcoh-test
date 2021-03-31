@@ -6,8 +6,17 @@ import ModernImg from "../../../images/pencil.svg";
 import CompleteImg from "../../../images/check.svg";
 
 import getDataFromServer from "../../../services/get-data-from-server";
+import { formDelete } from "../../../services/forms-actions";
 
-const ServerForm = ({ getData, locations, envs, servers }) => {
+const ServerForm = ({
+  getData,
+  locations,
+  envs,
+  servers,
+  unicId,
+  deleteCurrentForm,
+  locationNumber,
+}) => {
   const [visibleComplite, setVisibleComplite] = useState(false);
   const [location, setLocation] = useState("testenter.ru_01");
   const [enviroment, setEnviroment] = useState("Test_192.168.112.23");
@@ -17,14 +26,22 @@ const ServerForm = ({ getData, locations, envs, servers }) => {
     getData();
   }, []);
 
+  const deleteForm = () => {
+    deleteCurrentForm(unicId);
+  };
+
   return (
     <div className={visibleComplite ? "form active" : "form"}>
       <div className="form__top">
         <div className="form__title">
-          <h2>Тестовая локация 1</h2>
+          <h2>Тестовая локация {locationNumber + 1}</h2>
         </div>
         <div className="form__actions">
-          <button type="button" className="form__btn form__btn_delete">
+          <button
+            onClick={deleteForm}
+            type="button"
+            className="form__btn form__btn_delete"
+          >
             <img src={DeleteImg} alt="" />
           </button>
           {visibleComplite ? (
@@ -52,8 +69,10 @@ const ServerForm = ({ getData, locations, envs, servers }) => {
             <label className="form__label">Локация</label>
             <div className="form__select form__select_location">
               <select
+                className={visibleComplite ? "active" : null}
                 name="location"
                 id="location"
+                disabled={!visibleComplite}
                 value={location}
                 onChange={(event) => {
                   setLocation(event.target.value);
@@ -73,9 +92,11 @@ const ServerForm = ({ getData, locations, envs, servers }) => {
             <label className="form__label">Среда</label>
             <div className="form__select form__select_enviroment">
               <select
+                className={visibleComplite ? "active" : null}
                 name="enviroment"
                 id="enviroment"
                 value={enviroment}
+                disabled={!visibleComplite}
                 onChange={(event) => setEnviroment(event.target.value)}
                 className="form__select"
               >
@@ -110,6 +131,8 @@ const ServerForm = ({ getData, locations, envs, servers }) => {
             </label>
             <div className="form__input">
               <input
+                className={visibleComplite ? "active" : null}
+                disabled={!visibleComplite}
                 name="hint"
                 type="text"
                 id="hint"
@@ -135,6 +158,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   getData: () => dispatch(getDataFromServer()),
+  deleteCurrentForm: (unicId) => dispatch(formDelete(unicId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ServerForm);

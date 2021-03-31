@@ -4,4 +4,21 @@
   justify-content: center;
   width: 100%;
   min-height: 100vh;
+
+  &__content {
+    margin-bottom: 40px;
+  }
+
+  &__btns {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  &__btn {
+    margin-right: 25px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }

@@ -1,4 +1,41 @@
 @import "../default/variables.scss";
+// Btns ============================================================================
+
+.btn {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 12px 32px;
+
+  text-align: center;
+  font-size: 18px;
+  font-weight: 400;
+
+  background: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+
+  &_blue {
+    color: rgb(123, 121, 224);
+
+    border: 2px solid rgb(123, 121, 224);
+
+    @media (min-width: $md2 + px) {
+      &:hover {
+        background-color: rgb(123, 121, 224);
+
+        color: #fff;
+      }
+
+      &:active {
+        background-color: rgb(85, 83, 194);
+      }
+    }
+  }
+}
+
+// Forms =======================================================================================
 
 .form {
   width: 100%;
@@ -10,6 +47,10 @@
   border-radius: 15px;
 
   transition: border-color 0.3s ease;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 
   &.active {
     border-color: rgb(127, 176, 255);
@@ -140,6 +181,10 @@
 
       appearance: none;
       cursor: pointer;
+
+      &.active {
+        border-color: rgb(127, 176, 255);
+      }
     }
 
     &::before {
@@ -280,6 +325,10 @@
 
       background: none;
       border: 2px solid rgb(182, 181, 181);
+
+      &.active {
+        border-color: rgb(127, 176, 255);
+      }
     }
   }
 }
