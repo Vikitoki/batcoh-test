@@ -82,7 +82,7 @@ const ServerForm = ({
         <div className="notification">Загрузка данных с сервера</div>
       ) : error ? (
         <div className="notification">
-          Произошла ошибка выгрузки данных, повторите попытку в следующей жизни!
+          Произошла ошибка выгрузки данных, повторите попытку в следующей жизни! А если серьёзно проверьте README файл :)
         </div>
       ) : (
         <div className="form__content">
