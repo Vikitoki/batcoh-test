@@ -41,8 +41,6 @@ const ServerForm = ({
     deleteCurrentForm(unicId);
   };
 
-  console.log(error, loading, 1);
-
   return (
     <div className={visibleComplite ? "form active" : "form"}>
       <div className="form__top">
