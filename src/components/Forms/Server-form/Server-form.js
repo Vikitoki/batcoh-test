@@ -80,7 +80,8 @@ const ServerForm = ({
         <div className="notification">Загрузка данных с сервера</div>
       ) : error ? (
         <div className="notification">
-          Произошла ошибка выгрузки данных, повторите попытку в следующей жизни! А если серьёзно проверьте README файл :)
+          Произошла ошибка выгрузки данных, повторите попытку в следующей жизни!
+          А если серьёзно проверьте README файл :)
         </div>
       ) : (
         <div className="form__content">
@@ -145,16 +146,16 @@ const ServerForm = ({
           </div>
           <div className="form__row">
             <div className="form__item form__item_hint">
-              <label htmlFor="hint" className="form__label form__label_hint">
+              <label htmlFor={unicId} className="form__label form__label_hint">
                 Подсказка
               </label>
               <div className="form__input">
                 <input
                   className={visibleComplite ? "active" : null}
                   disabled={!visibleComplite}
-                  name="hint"
+                  name={unicId}
                   type="text"
-                  id="hint"
+                  id={unicId}
                   value={hintValue}
                   placeholder="Комментарий по локации"
                   onChange={(event) => {
